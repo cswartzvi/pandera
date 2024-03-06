@@ -577,9 +577,9 @@ class DataFrameModel(BaseModel):
         def __get_pydantic_core_schema__(
             cls, _source_type: Any, _handler: GetCoreSchemaHandler
         ) -> core_schema.CoreSchema:
-            return core_schema.no_info_plain_validator_function(
-                cls.pydantic_validate,
-            )
+            if not issubclass(_source_type, cls):
+                return core_schema.no_info_plain_validator_function(cls.validate)
+            return core_schema.no_info_plain_validator_function(cls.pydantic_validate)
 
         @classmethod
         def __get_pydantic_json_schema__(
